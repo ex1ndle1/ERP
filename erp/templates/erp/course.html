@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.title }} • ERP</title>
+    <link rel="stylesheet" href="{% static 'erp/css/style1.css' %}">
+</head>
+<body>
+
+    <header class="header">
+        <h1>{{ course.title }}</h1>
+    </header>
+
+    <main class="container">
+
+        <div class="course-details">
+            <p><strong>Teacher:</strong> {{ course.teacher }}</p>
+            <p><strong>Studying now:</strong> {{ course.studying_now }} students</p>
+            <p><strong>Course Duration:</strong> {{ course.course_duration }}</p>
+            <p><strong>Modules:</strong> {{ course.modules }}</p>
+        </div>
+
+
+    </main>
+
+</body>
+</html>
