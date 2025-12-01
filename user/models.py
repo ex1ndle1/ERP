@@ -9,9 +9,9 @@ class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     last_name =  models.CharField(max_length=20)
-    phone = models.IntegerField(max_length=18, unique=True)
+    phone = models.IntegerField( unique=True)
     specialization = models.CharField(max_length=20)
-    experience = models.IntegerField(max_length=20)
+    experience = models.IntegerField()
     
     def __str__(self):
         return f"{self.name} {self.last_name}"
@@ -23,11 +23,13 @@ class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
     name = models.CharField(max_length=20)
     last_name =  models.CharField(max_length=20)
-    phone = models.IntegerField(max_length=18)
+    phone = models.IntegerField()
     payment_status = models.BooleanField(default=False)
-
+    course = models.ForeignKey('erp.Course' , on_delete=models.CASCADE, related_name='student_course', default=1)
     def __str__(self):
         return f"{self.name} {self.last_name}"
+
+
 
 
 

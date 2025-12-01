@@ -3,7 +3,7 @@ from .forms import RegisterTeacherForm,RegisterStudentForm,LoginByEmailForm,Logi
 from django.contrib.auth import authenticate,login
 from .models import Teacher,Student
 from django.contrib.auth.models import User
-
+from erp.models import Course
 
 # Create your views here.
 
@@ -29,17 +29,24 @@ def teacher_register(request):
 
 
 def student_register(request):
-
+    course = Course.objects.all()
     if request.method == 'POST':
         form = RegisterStudentForm(request.POST)
         if form.is_valid():
-            form.save()
+            
+            student = form.save()
+            if student.course:
+                student.course.studiying_now += 1
+                student.course.save()
+
+
+
             return redirect('user:login_choice')
 
     else:
         form = RegisterStudentForm()
 
-    return render(request, 'user/student_register.html', {'form':form})
+    return render(request, 'user/student_register.html', {'form':form, 'courses':course})
 
 
 def login_by_email(request):
@@ -63,6 +70,7 @@ def login_by_email(request):
 
     form = LoginByEmailForm()
     return render(request, "user/login_by_email.html", {"form": form})
+
 
 
 def login_by_phone(request):

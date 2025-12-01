@@ -1,7 +1,7 @@
 from django import forms 
 from .models import Teacher,Student
 from django.contrib.auth.models import User
-
+from erp.models import Course 
 class RegisterTeacherForm(forms.Form):
     
     username = forms.CharField(max_length=150)
@@ -59,7 +59,7 @@ class RegisterStudentForm(forms.Form):
     name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
     phone = forms.IntegerField(required=True)
-
+    course = forms.ModelChoiceField(queryset=Course.objects.all(), required=True)
 
     def clean(self):
         try:
@@ -84,7 +84,7 @@ class RegisterStudentForm(forms.Form):
             last_name = self.cleaned_data['last_name'],
             email = self.cleaned_data['email'],
             phone = self.cleaned_data['phone'],
-           
+            course = self.cleaned_data['course']
         
         )
         except Exception:

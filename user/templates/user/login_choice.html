@@ -1,13 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{%static 'user/css/style.css'%}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login Choice</title>
+  
 </head>
 <body>
-    <h2>choice login method</h2>
-    <h1><a href="{%url 'user:login_by_email'%}">login by email</a></h1>
-    <h3><a href="{%url 'user:login_by_phone'%}">login by phone</a></h3>
+    <div class="container">
+        <h2>Choose Login Method</h2>
+        <a href="{% url 'user:login_by_email' %}" class="button">Login by Email</a>
+        <br>
+        <a href="{% url 'user:login_by_phone' %}" class="button">Login by Phone</a>
+    </div>
 </body>
 </html>
