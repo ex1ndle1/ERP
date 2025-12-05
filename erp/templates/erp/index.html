@@ -29,23 +29,41 @@
         <h1>Available Courses</h1>
 
         <div class="courses">
-            {% for course in courses %}
-            <div class="course-card">
-                <h2>{{ course.title }}</h2>
-                <p>Teacher: {{ course.teacher }}</p>
-                <p>Modules: {{ course.modules_count }}</p>
-                <p>Students enrolled: {{ course.studying_now }}</p>
-                <p>Start: {{ course.start_date }} | End: {{ course.end_date }}</p>
-                {% if course.image %}
-                    <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image">
-                {% endif %}
+    {% for course in courses %}
+<div class="course-card">
+    <h2>{{ course.title }}</h2>
+    <p>Teacher: {{ course.teacher }}</p>
+    <p>Modules: {{ course.modules_count }}</p>
+    <p>Students enrolled: {{ course.studiying_now }}</p>
+    <p>Start: {{ course.start_date }} | End: {{ course.end_date }}</p>
+    <p>Rating: {{course.rating}}</p>
+
+    {% if course.image %}
+        <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image">
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        {% if user.student %}
+            <a href="{% url 'erp:course_detail' user.student.id %}">
                 <button>View Course</button>
-            </div>
-            {% empty %}
-            <p>No courses available at the moment.</p>
-            {% endfor %}
-        </div>
-    </main>
+            </a>
+        {% elif user.teacher %}
+            <a href="{% url 'erp:course_teacher_detail' user.teacher.id %}">
+                <button>View Course</button>
+            </a>
+        {% else %}
+            <a href="{% url 'user:login_choice' %}">
+                <button>View Course</button>
+            </a>
+        {% endif %}
+    {% else %}
+        <a href="{% url 'user:login_choice' %}">
+            <button><a href="{% url 'user:login_choice'%}"></a> view courses</button>
+        </a>
+    {% endif %}
+
+</div>
+{% endfor %}
 
     <!-- Footer -->
     <footer class="footer">

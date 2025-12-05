@@ -50,12 +50,18 @@ def contact_view(request):
             
             send_mail(
                 subject=f'message from {name}',
-                email = email,
+              
                 message=message,
                 from_email=settings.EMAIL_HOST_USER,  
-                recipient_list=  ['muzaffarilxomjonov@gmail.com'],
+                recipient_list= ['muzaffarilxomjonov@gmail.com'],
+                
                 fail_silently=False,
+
+                
             )
+            
+
+            
             return render(request, 'erp/index.html')  
     else:
         form = ContactForm()

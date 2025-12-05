@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Teacher(models.Model):
+    role = models.CharField(max_length=10, default='Teacher')
     email = models.EmailField(unique=True, max_length=30, default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
@@ -19,6 +20,7 @@ class Teacher(models.Model):
 
 
 class Student(models.Model):
+    role = models.CharField(max_length=10, default='Student')
     email = models.EmailField(unique=True, max_length=30, default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
     name = models.CharField(max_length=20)

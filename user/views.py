@@ -48,7 +48,6 @@ def student_register(request):
 
     return render(request, 'user/student_register.html', {'form':form, 'courses':course})
 
-
 def login_by_email(request):
     if request.method == "POST":
         form = LoginByEmailForm(request.POST)
@@ -56,23 +55,40 @@ def login_by_email(request):
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
 
+            user = None
+            role = None
+            role_id = None
             try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                return render(request, "user/login_by_email.html", {"form": form,"error": "Email not registered" })
+                teacher = Teacher.objects.get(email=email)
+                user = teacher.user
+                role = 'teacher'
+                role_id = teacher.id
+            except Teacher.DoesNotExist:
+                pass
+            if user is None:
+                try:
+                    student = Student.objects.get(email=email)
+                    user = student.user
+                    role = 'student'
+                    role_id = student.id
+                except Student.DoesNotExist:
+                    return render(request, "user/login_by_email.html", {"form": form, "error": "Email not registered"})
+            auth_user = authenticate(request, username=user.username, password=password)
+            if auth_user:
+                login(request, auth_user)
 
-            user = authenticate(request, username=user.username, password=password)
-            if user:
-                login(request, user)
-                return redirect("erp:home")
+                if role == 'student':
+                    student = Student.objects.get(user=auth_user)
+                    course = student.course  
+                    return render(request, "erp/course.html", {"course": course})
+                return redirect(f"/course/{role}/{role_id}")
 
-            return render(request, "user/login_by_email.html", {"form": form,"error": "Incorrect password"})
+            return render(request, "user/login_by_email.html", {"form": form, "error": "Incorrect password"})
 
     form = LoginByEmailForm()
     return render(request, "user/login_by_email.html", {"form": form})
 
-
-
+# "/course/{role}/{role_id}
 def login_by_phone(request):
     if request.method == "POST":
         form = LoginByPhoneForm(request.POST)
@@ -80,9 +96,14 @@ def login_by_phone(request):
             phone = form.cleaned_data["phone"]
             password = form.cleaned_data["password"]
             user = None
+            role = None
+            role_id = None
+
             try:
                 teacher = Teacher.objects.get(phone=phone)
                 user = teacher.user
+                role = 'teacher'
+                role_id = teacher.id
             except Teacher.DoesNotExist:
                 pass
 
@@ -90,13 +111,15 @@ def login_by_phone(request):
                 try:
                     student = Student.objects.get(phone=phone)
                     user = student.user
+                    role = 'student'
+                    role_id = student.id
                 except Student.DoesNotExist:
                     return render(request, "user/login_by_phone.html", {"form": form,"error": "Phone number is not registered"})
 
             user = authenticate(request, username=user.username, password=password)
             if user:
                 login(request, user)
-                return redirect("erp:home")
+                return redirect(f"/course/{role}/{role_id}")
 
             return render(request, "user/login_by_phone.html", {"form": form,"error": "Incorrect password"})
 
